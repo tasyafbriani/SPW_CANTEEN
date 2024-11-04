@@ -1,16 +1,11 @@
 <template>
   <div class="header fixed-top">
     <div class="h-img">
-      <img src="~/assets/img/logo.jpeg" alt="COVER">
+      <img src="~/assets/img/logo2.png" alt="COVER">
     </div>
-    <div class="h-text">
-      <div class="t-judul">
+    <div class="h-text text-center">
+      <div class="t-judul " >
         <h2>SPW CANTEEN</h2>
-      </div>
-      <div class="search-container">
-        <form  @submit.prevent="getData">
-            <input v-model="keyword" type="search" class="form-control" placeholder="Search ...">
-          </form>
       </div>
     </div>
     <div class="button-container">
@@ -27,10 +22,8 @@
 </template>
 
 <script>
-import Produk from '~/layouts/produk.vue';
-
 export default {
-  name: 'Header'
+  name: 'Header2'
 };
 </script>
 
@@ -42,6 +35,7 @@ export default {
   height: 7rem;
   background-color: #ffffff;
   color: #FF6969;
+  background-color: #FFF1F1;
   padding: 0 20px;
   box-sizing: border-box;
   justify-content: space-between;
@@ -62,7 +56,6 @@ export default {
 .h-text {
   flex: 1;
   line-height: 1.2;
-  display: flex;
   flex-direction: row; 
   align-items: center; 
 }
@@ -73,7 +66,7 @@ export default {
   font-weight: 700;
   font-family: math;
   text-transform: uppercase;
-  padding-right: 20px; 
+ text-align: center;
 }
 
 .search-container {
@@ -99,7 +92,3 @@ export default {
 }
 
 </style>
-
-
-
-
