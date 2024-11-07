@@ -71,6 +71,16 @@ const { data: produks } = useAsyncData('produk', async () => {
 })
 </script>
 <style scoped>
+.shadow-lg {
+  box-shadow: 6px 4px 0 #2e2e2eae !important;
+}
+.card:hover {
+  transform: scale(1.05);
+  box-shadow: 4px 4px 20px #2e2e2eae !important;
+}
+.card {
+  transition: all 0.2s ease-in-out;
+}
 .cover {
   width: 100%;
 }

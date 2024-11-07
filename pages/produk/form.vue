@@ -40,6 +40,8 @@
 </template>
 
 <script setup>
+import Swal from 'sweetalert2';
+
 definePageMeta({
   middleware: 'auth',
   layout: 'produk',
@@ -89,7 +91,7 @@ const kirimData = async () => {
       throw insertError;
     }
 
-    alert("berhasil dikirim!");
+    Swal.fire("data produk berhasil disimpan");
   } catch (error) {
     console.error("Error uploading file:", error.message);
     // alert("Gagal mengupload file.");

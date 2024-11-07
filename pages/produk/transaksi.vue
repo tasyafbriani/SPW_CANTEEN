@@ -70,6 +70,8 @@
 </template>
 
 <script setup>
+import Swal from 'sweetalert2';
+
 definePageMeta({
   middleware: 'auth',
   layout: 'produk',
@@ -106,15 +108,6 @@ const updateTotal = (visitor) => {
 const increment = (visitor) => {
   if (visitor.transaksi <= visitor.jumlah) {
     visitor.transaksi += 1; // Hanya tambah jika kurang dari jumlah
-    updateTotal(visitor); // Update total setelah penambahan
-  } else {
-    alert("Jumlah transaksi tidak boleh lebih dari jumlah barang tersedia."); // Pesan kesalahan
-  }
-}
-
-const min = (visitor) => {
-  if (visitor.transaksi <= visitor.jumlah) {
-    visitor.transaksi -= 1; // Hanya tambah jika kurang dari jumlah
     updateTotal(visitor); // Update total setelah penambahan
   } else {
     alert("Jumlah transaksi tidak boleh lebih dari jumlah barang tersedia."); // Pesan kesalahan
@@ -158,7 +151,7 @@ const saveTransactions = async () => {
       alert("Terjadi kesalahan saat menyimpan transaksi."); // Pesan kesalahan
     } else {
       console.log('Transactions saved:', data);
-      alert("Transaksi berhasil disimpan!"); // Pesan sukses
+      Swal.fire("Transaksi berhasil disimpan"); // Pesan sukses
       // Reset transaksi setelah disimpan
       visitors.value.forEach(visitor => {
         visitor.transaksi = 0; // Reset transaksi
@@ -167,7 +160,11 @@ const saveTransactions = async () => {
     }
   } else {
     //const { data, error } = await supabase.from('transaksi').update(transactionsToSave);
-    alert("Terjadi"); // Pesan kesalahan
+    Swal.fire({
+  icon: "error",
+  title: "Oops...",
+  text: "kamu belum melakukan Transaksi",
+}); // Pesan kesalahan
   }
 }
 

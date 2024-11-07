@@ -16,6 +16,7 @@
     "file-saver": "^2.0.5",
     "modules": "^0.4.0",
     "nuxt": "^3.12.4",
+    "sweetalert2": "^11.14.5",
     "vue": "latest",
     "xlsx": "^0.18.5"
   }
