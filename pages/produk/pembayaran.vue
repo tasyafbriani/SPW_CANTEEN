@@ -7,6 +7,8 @@
     </div>
     <div class="row justify-content-end ">
       <div class="col-2">
+      
+
             <button @click="downloadExcel" class="btn ">
               Download Data
             </button>
@@ -63,9 +65,6 @@ const blob = new Blob([excelBuffer], { type: 'application/octet-stream' });
 saveAs(blob, 'data-pembayaran_produk.xlsx');
 };
 
-
-
-
 definePageMeta({
   middleware: 'auth',
   layout: 'produk',
@@ -107,12 +106,7 @@ onMounted(() => {
   cursor: pointer;
   margin-bottom: 1rem;
 }
-.table thead th {
-  background-color: #f8f9fa;
-}
-.table tbody tr:nth-child(even) {
-  background-color: #f2f2f2; 
-}
+
 .icon-button {
   background: none;
   border: none;

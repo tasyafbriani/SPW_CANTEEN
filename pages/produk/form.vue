@@ -91,7 +91,10 @@ const kirimData = async () => {
       throw insertError;
     }
 
-    Swal.fire("data produk berhasil disimpan");
+    Swal.fire({
+        icon: "success",
+        text: "Data Berhasil Disimpan",
+      })
   } catch (error) {
     console.error("Error uploading file:", error.message);
     // alert("Gagal mengupload file.");

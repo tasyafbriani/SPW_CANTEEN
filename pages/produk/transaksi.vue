@@ -151,7 +151,11 @@ const saveTransactions = async () => {
       alert("Terjadi kesalahan saat menyimpan transaksi."); // Pesan kesalahan
     } else {
       console.log('Transactions saved:', data);
-      Swal.fire("Transaksi berhasil disimpan"); // Pesan sukses
+      Swal.fire({
+        icon: "success",
+        title: "Hore...",
+        text: "Transaksi Berhasil Disimpan",
+      });// Pesan sukses
       // Reset transaksi setelah disimpan
       visitors.value.forEach(visitor => {
         visitor.transaksi = 0; // Reset transaksi
@@ -195,13 +199,6 @@ onMounted(() => {
   border-radius: 0.375rem;
 }
 
-.table thead th {
-  background-color: #f8f9fa;
-}
-
-.table tbody tr:nth-child(even) {
-  background-color: #f2f2f2; 
-}
 
 .form-control {
   border-radius: 0.375rem;
