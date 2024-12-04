@@ -7,7 +7,7 @@
     </div>
     <div class="row justify-content-end ">
       <div class="col-1">
-        <button class="btn" @click="saveTransactions" style="background-color: #FFB085">Kirim</button>
+        <button class="btn1" @click="saveTransactions" style="background-color: #FFB085; border-radius: 8px;">Kirim</button>
       </div>
     </div>
     
@@ -22,6 +22,7 @@
           <th>BANYAK BARANG</th>
           <th>TRANSAKSI</th>
           <th>TOTAL</th>
+          <th>edit/hapus</th>
         </tr>
       </thead>
       <tbody>
@@ -43,30 +44,216 @@
                 @change="updateTotal(visitor); updateTerjual(visitor)"
               />
               <button
-            class="btn btn-outline-secondary btn-sm"
+            class="btn1 btn-outline-secondary btn-sm"
             type="button"
             @click="increment(visitor)"
             :disabled="visitor.transaksi >= visitor.jumlah" 
           >
             +
           </button>
+          <button
+  class="btn1 btn-outline-danger btn-sm"
+  type="button"
+  @click="resetTransaction(visitor)"
+  style="border-radius: 8px;" 
+>
+  Batalkan
+</button>
 
-
-              <button
-                class="btn btn-outline-danger btn-sm"
-                type="button"
-                @click="resetTransaction(visitor)"
-              >
-                Batalkan
-              </button>
             </div>
           </td>
           <td>{{ visitor.total }}</td>
+          <td>
+  <button @click="editData(visitor)" class="btn btn-primary btn-outline-secondary btn-sm" type="button" style="color:white;">
+    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
+      <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
+      <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z"/>
+    </svg> 
+    Edit
+  </button>
+  <button @click="confirmDelete(visitor)" class="btn btn-danger btn-outline-secondary btn-sm" type="button" style="color:white;">
+    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
+      <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0z"/>
+      <path d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4zM2.5 3h11V2h-11z"/>
+    </svg> 
+    Hapus
+  </button>
+</td>
+
         </tr>
       </tbody>
+      
     </table>
 
+ <!-- Modal Konfirmasi Hapus -->
+ <div 
+    v-if="showConfirmModal" 
+    class="modal d-block" 
+    tabindex="-1" 
+    style="background-color: rgba(0,0,0,0.5);"
+  >
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Konfirmasi Hapus</h5>
+          <button 
+            type="button" 
+            class="btn-close" 
+            @click="showConfirmModal = false"
+          ></button>
+        </div>
+        <div class="modal-body">
+          <p>Apakah {{ visitorToDelete?.nama }} yakin mau dihapus?</p>
+        </div>
+        <div class="modal-footer">
+          <button 
+            @click="showConfirmModal = false" 
+            class="btn btn-secondary"
+          >
+            Cancel
+          </button>
+          <button 
+            @click="hapusData" 
+            class="btn btn-danger"
+          >
+            Delete
+          </button>
+        </div>
+      </div>
+    </div>
   </div>
+</div>
+
+
+
+
+    <!-- Modal Edit -->
+    <div 
+    v-if="isEditing" 
+    class="modal d-block" 
+    tabindex="-1" 
+    style="background-color: rgba(0,0,0,0.5);"
+  >
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Edit Data</h5>
+          <button 
+            type="button" 
+            class="btn-close" 
+            @click="isEditing = false"
+          ></button>
+        </div>
+        <div class="modal-body">
+          <div class="row justify-content-center">
+            <div class="col-12">
+              <div class="mb-3">
+                <input  
+                  v-model="selectedVisitor.nama" 
+                  type="text" 
+                  class="form-control form-control-lg" 
+                  placeholder="Nama:" 
+                />
+              </div>
+              <div class="mb-3">
+                <select  
+                  v-model="selectedVisitor.kelas"  
+                  class="form-select form-select-lg" 
+                  aria-label="Kelas"
+                >
+                  <option value="" selected>Kelas</option>
+                  <option 
+                    v-for="(member, i) in members" 
+                    :key="i" 
+                    :value="member.id"
+                  >
+                    {{ member.nama }}
+                  </option>
+                </select>
+              </div>
+              <div class="mb-3">
+                <input 
+                  v-model="selectedVisitor.nama_barang" 
+                  type="text" 
+                  class="form-control form-control-lg" 
+                  placeholder="Nama Barang:" 
+                />
+              </div>
+              <div class="mb-3">
+                <input  
+                  v-model="selectedVisitor.harga" 
+                  type="text" 
+                  class="form-control form-control-lg" 
+                  placeholder="Harga:" 
+                />
+              </div>
+              <div class="mb-3">
+                <input  
+                  v-model="selectedVisitor.jumlah" 
+                  type="number" 
+                  class="form-control form-control-lg" 
+                  placeholder="Jumlah:" 
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button 
+            @click="isEditing = false" 
+            class="btn btn-danger"
+          >
+            Cancel
+          </button>
+          <button 
+            @click="updateData" 
+            class="btn btn-primary"
+          >
+            Save
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+ <!-- Modal Konfirmasi Hapus -->
+ <div 
+    v-if="showConfirmModal" 
+    class="modal d-block" 
+    tabindex="-1" 
+    style="background-color: rgba(0,0,0,0.5);"
+  >
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Konfirmasi Hapus</h5>
+          <button 
+            type="button" 
+            class="btn-close" 
+            @click="showConfirmModal = false"
+          ></button>
+        </div>
+        <div class="modal-body">
+          <p>Apakah {{ visitorToDelete?.nama }} yakin mau dihapus?</p>
+        </div>
+        <div class="modal-footer">
+          <button 
+            @click="showConfirmModal = false" 
+            class="btn btn-secondary"
+          >
+            Cancel
+          </button>
+          <button 
+            @click="hapusData" 
+            class="btn btn-danger"
+          >
+            Delete
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
 </template>
 
 <script setup>
@@ -81,12 +268,23 @@ const supabase = useSupabaseClient()
 const visitors = ref([]);
 const userID = ref();
 const user = useSupabaseUser()
+const members=ref ([]);
+const isEditing = ref(false);
+const selectedVisitor = ref(null);
+const showConfirmModal = ref(false); // Untuk mengontrol tampilan modal konfirmasi
+const visitorToDelete = ref(null);
 
+
+const getkelas = async () => {
+    const { data, error } = await supabase.from("kelas").select("*")
+    if(data) members.value = data
+};
 // Fungsi untuk mendapatkan produk dan jumlah terjual
 const getproduk = async () => {
   const { data: produkData, error: produkError } = await supabase
     .from('produk')
     .select(`*, kelas(*)`)
+    .eq('tgl',new Date().toISOString().split('T')[0])
     .order('id', { ascending: false });
   
   if (produkData) {
@@ -173,16 +371,73 @@ const saveTransactions = async () => {
 }
 
 onMounted(() => {
+  getkelas();
   getproduk();
-  getUserLogin()
+  getUserLogin();
 });
+
+const updateData = async () => {
+  const id = selectedVisitor.value.id; // Pastikan id ini adalah angka
+  const { nama, kelas, nama_barang, harga, jumlah } = selectedVisitor.value; // Destrukturisasi objek
+
+  const { error } = await supabase
+    .from("produk")
+    .update({
+      nama,
+      kelas,
+      nama_barang,
+      harga: parseInt(harga), // Pastikan harga dalam bentuk angka
+      jumlah: parseInt(jumlah) // Pastikan jumlah dalam bentuk angka
+    })
+    .eq("id", parseInt(id)); // Pastikan id juga dalam bentuk angka
+
+  if (!error) {
+    isEditing.value = false;
+    getproduk(); // Refresh data setelah update
+  } else {
+    console.error("Error updating data:", error);
+  }
+};
+
+const hapusData = async () => {
+  if (visitorToDelete.value) {
+    const { error } = await supabase.from("produk").delete().eq("id", visitorToDelete.value.id);
+    if (!error) {
+      getproduk(); // Refresh data tabel
+    } else {
+      console.error("Error deleting data:", error);
+    }
+    showConfirmModal.value = false; // Tutup modal setelah menghapus
+    visitorToDelete.value = null; // Reset data setelah menghapus
+  }
+};
+
+
+const editData = (visitor) => {
+  selectedVisitor.value = { ...visitor };
+  isEditing.value = true;
+};
+
+const confirmDelete = (visitor) => {
+  visitorToDelete.value = visitor; // Simpan data visitor yang akan dihapus
+  showConfirmModal.value = true; // Tampilkan modal konfirmasi
+};
 </script>
 
 <style scoped>
-.btn {
+.btn1 {
   border: none;
   color: white;
   background: #FFB085; 
+  margin: 4px 5px;
+  padding: 10px 15px;
+  font-size: 16px;
+  text-align: center;
+  display: inline-block;
+  cursor: pointer;
+}
+.btn {
+  border: none;
   margin: 4px 5px;
   padding: 10px 15px;
   font-size: 16px;

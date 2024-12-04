@@ -49,6 +49,7 @@
             <div class="card-body">
               <h3 class="card-text">{{ produk.nama_barang }}</h3>
               <h5 class="card-title">Rp.{{ produk.harga }}</h5>
+              <h5 class="card-title">tersedia: {{ produk.jumlah }}</h5>
             </div>
           </div>
         </div>
@@ -64,6 +65,7 @@ const { data: produks } = useAsyncData('produk', async () => {
   let query = supabase
     .from("produk")
     .select(`*, kelas(*)`)
+    .eq('tgl',new Date().toISOString().split('T')[0]);
   if (keyword.value) query = query.ilike("nama_barang", `%${keyword.value}%`)
   const { data, error } = await query
   if (error) throw error
@@ -71,6 +73,15 @@ const { data: produks } = useAsyncData('produk', async () => {
 })
 </script>
 <style scoped>
+@media (max-width:1024px){
+  
+}
+@media (max-width:768px){
+
+}
+@media (max-width:480px){
+
+}
 .card:hover {
   transform: scale(1.05);
   box-shadow: 4px 4px 20px #2e2e2eae !important;

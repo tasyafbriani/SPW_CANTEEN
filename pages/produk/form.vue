@@ -27,7 +27,7 @@
             <input v-model="form.harga" type="text" class="form-control form-control-lg radius" placeholder="Harga Jual:" />
           </div>
           <div class="text-center mb-3">
-             <label>Upload Foto Produk</label>
+             <label>Upload Foto Produk </label>
              <input @change="handleFileInput" type="file" class="form-control form-control-lg radius" id="file-input" accept="image/*" placeholder="Upload Foto Produk:" required />
           </div>
           <div class="d-flex justify-content-end mt-4">
